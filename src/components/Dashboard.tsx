@@ -22,15 +22,6 @@ const Dashboard = () => {
 
   const utils = trpc.useContext()
 
-  const getFileMessagesLength = (fileId: string) => {
-    fetch('/api/messageLength',{
-      method: 'GET',
-      body: JSON.stringify({
-        fileId: fileId
-      })
-    })
-  }
-
   const { data: files, isLoading } =
     trpc.getUserFiles.useQuery()
 
