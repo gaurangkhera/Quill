@@ -1,6 +1,6 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -11,11 +11,11 @@ export default function Home() {
         <Link href={'/pricing'}>
           <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-grey-300 hover:bg-white/50">
             <p className="animate-intext-sm font-semibold text-gray-700">
-              <Button variant={'ghost'} size={'sm'} className="gap-1.5">Check out our new pro plan <ArrowRight className="h-5 w-5 text-blue-600" /></Button>
+              <Button variant={'ghost'} size={'sm'} className="gap-1.5 hover:bg-transparent">Check out our new pro plan <ChevronRight className="h-5 w-5 text-blue-600" /></Button>
             </p>
           </div></Link>
-        <h1 className="max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl">
-          Chat with any <span className="text-blue-600">document</span> in seconds.
+        <h1 className="max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl heading">
+          Chat with any <span className="text-blue-600 heading">document</span> in seconds.
         </h1>
         <p className="mt-5 max-w-prose text-zinc-700 sm:text-lg">
           Simple. Upload your PDF and start an engaging conversation.
@@ -60,7 +60,7 @@ export default function Home() {
       <div className="mx-auto mb-32 mt-32 max-w-5xl sm:mt-56">
         <div className="mb-12 px-6 lg:px-8">
           <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="mt-2 font-bold text-4xl text-gray-900 sm:text-5xl">Start chatting immediately</h2>
+            <h2 className="mt-2 font-bold text-4xl text-gray-900 sm:text-5xl heading">Start chatting immediately</h2>
             <p className="mt-2 text-lg text-gray-600">
               Chatting with your PDFs has never been easier.
             </p>

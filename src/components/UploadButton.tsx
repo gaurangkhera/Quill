@@ -153,6 +153,7 @@ const UploadDropzone = ({
                 type='file'
                 id='dropzone-file'
                 className='hidden'
+                disabled
               />
             </label>
           </div>
@@ -180,7 +181,7 @@ const UploadButton = ({
       <DialogTrigger
         onClick={() => setIsOpen(true)}
         asChild>
-        <Button className='gap-1.5'><Plus /></Button>
+        <Button size={'lg'} className='gap-1.5'>Upload PDF</Button>
       </DialogTrigger>
 
       <DialogContent>
