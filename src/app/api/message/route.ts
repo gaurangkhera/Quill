@@ -71,7 +71,7 @@ export const POST = async (req: NextRequest) => {
       model: 'gpt-3.5-turbo',
       temperature: 0.7, // Adjust the temperature as needed
       stream: true,
-      max_tokens: 1024,
+      max_tokens: Infinity,
       messages: [
         {
           role: 'system',
