@@ -74,5 +74,7 @@ export async function POST(request: Request) {
     })
   }
 
+  console.log('doneee bro')
+
   return new Response(null, { status: 200 })
 }
