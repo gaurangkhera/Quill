@@ -1,9 +1,10 @@
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import Link from "next/link";
-import { ArrowRight, FeatherIcon } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "./ui/button";
 import { LoginLink, RegisterLink, getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import UserAccountNav from "./UserAccountNav";
+import MobileNav from "./MobileNav";
 
 const Navbar = () => {
 
@@ -17,13 +18,15 @@ const Navbar = () => {
                 <div className="flex h-14  items-center justify-between border-b border-zinc-200">
                     <Link href="/" className="flex z-40 font-semibold"><span className="heading text-2xl text-blue-600">quill.</span></Link>
 
+                    <MobileNav isAuth={!!user} />
+
                     <div className="hidden items-center space-x-4 sm:flex">
-                       { !user ? (
-                         <>
-                         <Link href="/pricing" className={buttonVariants({
+                    <Link href="/pricing" className={buttonVariants({
                              variant: "ghost",
                              size: "sm"
                          })}>Pricing</Link>
+                       { !user ? (
+                         <>
                          <LoginLink className={buttonVariants({
                              variant: 'ghost',
                              size: 'sm'
