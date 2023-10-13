@@ -9,8 +9,10 @@ import { db } from '@/db'
 import { z } from 'zod'
 import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query'
 import { absoluteUrl } from '@/lib/utils'
-import { getUserSubscriptionPlan, stripe } from '@/lib/stripe'
-import Stripe from 'stripe'
+import {
+  getUserSubscriptionPlan,
+  stripe,
+} from '@/lib/stripe'
 import { plans } from '@/config/stripe'
 
 export const appRouter = router({
@@ -48,32 +50,6 @@ export const appRouter = router({
         userId,
       },
     })
-  }),
-
-  getFileMessagesLength: privateProcedure.input(
-    z.object({
-      fileId: z.string(),
-    })
-  ).query( async ({ ctx, input }) => {
-    const { userId } = ctx
-    const { fileId } = input
-
-    const file = await db.file.findFirst({
-      where: {
-        id: fileId,
-        userId,
-      },
-    })
-
-    if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
-
-    const messages = await db.message.findMany({
-      where: {
-        fileId,
-      },
-    })
-
-    return messages.length
   }),
 
   createStripeSession: privateProcedure.mutation(
@@ -114,7 +90,7 @@ export const appRouter = router({
         await stripe.checkout.sessions.create({
           success_url: billingUrl,
           cancel_url: billingUrl,
-          payment_method_types: ['card'],
+          payment_method_types: ['card', 'paypal'],
           mode: 'subscription',
           billing_address_collection: 'auto',
           line_items: [
