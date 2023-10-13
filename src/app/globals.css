@@ -8,11 +8,11 @@
 
 @font-face {
   font-family: 'Heading';
-  src: url('../fonts/CalSans-SemiBold.woff');
+  src: url('../fonts/4UaGrENHsxJlGDuGo1OIlL3Owp5eKQtG.woff2');
 }
 
 .heading {
-  font-family: 'Heading';
+  font-family: 'Heading' !important;
 }
 
 
