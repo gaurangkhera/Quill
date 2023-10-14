@@ -7,14 +7,16 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { NextRequest } from 'next/server';
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import { getEncoding } from 'js-tiktoken';
 
-const encoding = getEncoding("cl100k_base");
-const interval = 400
+interface SearchResult {
+  pageContent: string;
+  metadata: {
+    fileName: string;
+  };
+}
 
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
+function customFilter(result: SearchResult, targetFileName: string): boolean {
+  return result.metadata?.fileName === targetFileName;
 }
 
 export const POST = async (req: NextRequest) => {
@@ -52,20 +54,21 @@ export const POST = async (req: NextRequest) => {
 
   const vectorStore = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex }); 
 
+
   try {
     // Search for similar messages using the file ID as context
-    const results = await vectorStore.similaritySearch(message, 4);
+    const results = await vectorStore.similaritySearch(message, 1, {
+      filter: (result: SearchResult) => customFilter(result, file.id)
+    });
     const prevMessages = await db.message.findMany({
       where: { fileId },
       orderBy: { createdAt: 'asc' },
       take: 6,
     });
     const formattedPrevMessages = prevMessages.map((msg) => ({
-      role: msg.isUserMessage
-        ? ('user' as const)
-        : ('assistant' as const),
+      role: msg.isUserMessage ? 'user' : 'assistant',
       content: msg.text,
-    }))
+    }));
     
     // Construct a context string with previous conversation, results, and user input
     const context = `PREVIOUS CONVERSATION:${formattedPrevMessages.map((msg) => {
@@ -73,20 +76,12 @@ export const POST = async (req: NextRequest) => {
       return `Assistant:${msg.content}\n`;
     })}CONTEXT:${results.map((r) => r.pageContent).join('\n\n')}USER INPUT:${message}`;
 
-    const conversationTokens = countTokensInConversation(
-      formattedPrevMessages,
-      results,
-      message
-    );
-
-    const modelToUse = conversationTokens < 4096 - interval ? 'gpt-3.5-turbo' : 'gpt-3.5-turbo-16k';
-
 
     // Use a system message to instruct the model
     const response = await openai.chat.completions.create({
-      model: modelToUse,
-      temperature: 0,
-      stream: true, 
+      model: 'gpt-3.5-turbo',
+      temperature: 0.7, // Adjust the temperature as needed
+      stream: true,
       messages: [
         {
           role: 'system',
@@ -118,29 +113,3 @@ export const POST = async (req: NextRequest) => {
     return new Response('InternalServerError', { status: 500 });
   }
 };
-
-function countTokensInConversation(prevMessages: Message[], results: any[], message: string) {
-  const conversationText = `
-    Use the following pieces of context (or previous conversation if needed) to answer the user's question in markdown format. \nIf you don't know the answer, just say that you don't know, don't try to make up an answer.
-    
-    \n----------------\n
-    
-    PREVIOUS CONVERSATION:
-    ${prevMessages.map((message) => {
-      if (message.role === 'user')
-        return `User: ${message.content}\n`;
-      return `Assistant: ${message.content}\n`;
-    })}
-    
-    \n----------------\n
-    
-    CONTEXT:
-    ${results.map((r) => r.pageContent).join('\n\n')}
-    
-    USER INPUT: ${message}
-  `;
-
-  const tokens = encoding.encode(conversationText);
-  const tokenCount = tokens.length;
-  return tokenCount
-}

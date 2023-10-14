@@ -75,10 +75,13 @@ const onUploadComplete = async ({ metadata, file }: {
     const combinedData = pageLevelDocs.map((document) => {
       return {
         ...document,
+        metadata: {
+          fileId: createdFile.id,
+        },
         dataset: 'pdf', // Use a field to indicate the source dataset (e.g., 'pdf')
       };
     });
-
+    
     const embeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY });
 
     await PineconeStore.fromDocuments(combinedData, embeddings, {

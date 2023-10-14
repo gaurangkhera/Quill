@@ -180,6 +180,11 @@ dependencies:
     specifier: ^3.21.4
     version: 3.22.4
 
+devDependencies:
+  '@types/pdf-parse':
+    specifier: ^1.1.2
+    version: 1.1.2
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -1609,6 +1614,10 @@ packages:
   /@types/node@20.6.3:
     resolution: {integrity: sha512-HksnYH4Ljr4VQgEy2lTStbCKv/P590tmPe5HqOnv9Gprffgv5WXAY+Y5Gqniu0GGqeTCUdBnzC3QSrzPkBkAMA==}
     dev: false
+
+  /@types/pdf-parse@1.1.2:
+    resolution: {integrity: sha512-4ftxqGUcYYjOmh6aTHvFZk9Y7N4j1+UCqBv1hRz+21zXnr08x9ZZeYovJUjyK7r7TthuLX+UND9Q42KFpbvF0g==}
+    dev: true
 
   /@types/prop-types@15.7.8:
     resolution: {integrity: sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==}
